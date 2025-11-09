@@ -1,12 +1,16 @@
+import { DataTypes } from "sequelize";
 
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('./index');
+export default (sequelize) => {
+  const Lead = sequelize.define("Lead", {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    name: { type: DataTypes.STRING, allowNull: false },
+    phone: { type: DataTypes.STRING, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: "new" },
+  });
 
-const Lead = sequelize.define('Lead', {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  name: { type: DataTypes.STRING },
-  email: { type: DataTypes.STRING },
-  status: { type: DataTypes.ENUM('new','contacted','qualified','lost','won'), defaultValue: 'new' }
-}, { tableName: 'leads' });
-
-module.exports = Lead;
+  return Lead;
+};

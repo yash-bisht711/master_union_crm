@@ -1,6 +1,18 @@
+import { Sequelize } from "sequelize";
+import UserModel from "./user.js";
+import LeadModel from "./lead.js";
 
-const { Sequelize } = require('sequelize');
-const connectionString = process.env.DATABASE_URL || 'postgres://crmuser:crmpass@localhost:5432/crmdb';
-const sequelize = new Sequelize(connectionString, { dialect: 'postgres', logging: false });
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  logging: false,
+});
 
-module.exports = { sequelize };
+// Initialize models
+const User = UserModel(sequelize);
+const Lead = LeadModel(sequelize);
+
+// Associations
+User.hasMany(Lead, { foreignKey: "ownerId", as: "leads" });
+Lead.belongsTo(User, { foreignKey: "ownerId", as: "owner" });
+
+export { sequelize, User, Lead };
